@@ -88,10 +88,9 @@ const SignUp = styled.a`
 	width: rem;
 	letter-spacing: 1.5px;
 	font-size: 18px;
-	padding: 16.5px 0;
+	padding: 16px 0;
 	border: 1px solid transparent;
 	border-radius: 4px;
-	margin-bottom: 1rem;
 
 	&:hover {
 		background-color: #0483ee;
