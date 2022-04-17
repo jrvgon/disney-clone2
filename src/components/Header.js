@@ -1,3 +1,4 @@
+import { useEffect } from 'react'
 import styled from 'styled-components'
 import { signInWithPopup } from 'firebase/auth'
 import { useDispatch, useSelector } from 'react-redux'
@@ -7,9 +8,18 @@ import { selectUserName, selectUserPhoto, setUserLoginDetails } from '../feature
 
 const Header = (props) => {
 	const dispatch = useDispatch()
-	const history = useNavigate()
+	const navigate = useNavigate()
 	const userName = useSelector(selectUserName)
 	const userPhoto = useSelector(selectUserPhoto)
+
+	useEffect(() => {
+		auth.onAuthStateChanged(async (user) => {
+			if (user) {
+				setUser(user)
+				navigate.push('/home')
+			}
+		})
+	}, [userName])
 
 	const handleAuth = () => {
 		signInWithPopup(auth, provider)
@@ -189,6 +199,7 @@ const Login = styled.a`
 
 const UserImg = styled.img`
 	height: 100%;
+	border-radius: 50%;
 `
 
 export default Header
