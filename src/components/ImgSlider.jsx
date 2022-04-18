@@ -87,7 +87,7 @@ const Wrap = styled.div`
 		padding: 4px;
 
 		img {
-			width: 100%;
+			width: 10vw;
 			height: 100%;
 		}
 
