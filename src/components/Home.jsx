@@ -11,51 +11,53 @@ import Trending from './Trending'
 import db from '../firebase'
 import { selectUserName } from '../features/user/userSlice'
 import { setMovies } from '../features/movie/movieSlice'
-import { doc, collection, onSnapshot, getDoc } from 'firebase/firestore'
+import { collection, onSnapshot } from 'firebase/firestore'
 
 const Home = (props) => {
 	const dispatch = useDispatch()
 	const userName = useSelector(selectUserName)
-	let recommends = []
-	let newDisney = []
-	let originals = []
-	let trending = []
+	const colRef = collection(db, 'movies')
 
 	useEffect(() => {
-		const docRef = doc(db, 'movies', 'Bao')
-		const docSnap = getDoc(docRef)
+		let recommends = []
+		let newDisneys = []
+		let originals = []
+		let trending = []
 
-		if (docSnap.exists()) {
-			console.log(docSnap.data)
-		} else {
-			console.log('No such document!')
-		}
-		// collection(db, 'movies').onSnapshot((snapshot) => {
-		// 	console.log(
-		// 		snapshot.docs.map((doc) => {
-		// 			doc.data()
-		// 		})
-		// 	)
-		// switch (doc.data().type) {
-		// 	case 'recommend':
-		// 		recommends.push({ id: doc.id, ...doc.data() })
-		// 		break
+		onSnapshot(colRef, (snapshot) => {
+			// eslint-disable-next-line array-callback-return
+			snapshot.docs.map((doc) => {
+				switch (doc.data().type) {
+					case 'recommend':
+						recommends = [...recommends, { id: doc.id, ...doc.data() }]
+						break
 
-		// 	case 'new':
-		// 		newDisney.push({ id: doc.id, ...doc.data() })
-		// 		break
+					case 'new':
+						newDisneys = [...newDisneys, { id: doc.id, ...doc.data() }]
+						break
 
-		// 	case 'original':
-		// 		originals.push({ id: doc.id, ...doc.data() })
-		// 		break
+					case 'original':
+						originals = [...originals, { id: doc.id, ...doc.data() }]
+						break
 
-		// 	case 'trending':
-		// 		trending.push({ id: doc.id, ...doc.data() })
-		// 		break
-		// 	// no default
-		// }
-	})
-	// })
+					case 'trending':
+						trending = [...trending, { id: doc.id, ...doc.data() }]
+						break
+					// no default
+				}
+			})
+
+			dispatch(
+				setMovies({
+					recommend: recommends,
+					newDisney: newDisneys,
+					original: originals,
+					trending: trending,
+				})
+			)
+		})
+		// eslint-disable-next-line react-hooks/exhaustive-deps
+	}, [userName])
 
 	return (
 		<Container>
