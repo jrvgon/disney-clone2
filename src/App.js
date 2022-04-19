@@ -6,7 +6,7 @@ import Header from './components/Header'
 import Home from './components/Home'
 import Detail from './components/Detail'
 
-function App() {
+const App = () => {
 	return (
 		<div className='App'>
 			<Router>
